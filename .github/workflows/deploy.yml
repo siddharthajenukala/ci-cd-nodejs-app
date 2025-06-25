@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # or 'master' if that’s your branch
+      - main
 
 jobs:
   deploy:
@@ -18,10 +18,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
 
-      - name: Disable host key checking
+      - name: Disable SSH strict host checking
         run: |
-          echo "Host *" > ~/.ssh/config
+          echo "Host *" >> ~/.ssh/config
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: Deploy to EC2
