@@ -20,13 +20,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
-
-      - name: Disable SSH strict host checking
-        run: |
           echo "Host *" >> ~/.ssh/config
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
 
-            - name: Deploy to EC2
+      - name: Deploy to EC2
         run: |
           ssh ec2-user@18.212.174.82 << 'EOF'
             cd ~/web-app || git clone https://github.com/siddharthajenukala/ci-cd-nodejs.git web-app && cd web-app
@@ -34,4 +31,3 @@ jobs:
             npm install
             pm2 restart app || pm2 start app.js --name app
           EOF
-
