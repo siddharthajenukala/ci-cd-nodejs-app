@@ -26,8 +26,10 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh ec2-user@18.212.174.82 << 'EOF'
-            cd ~/web-app || git clone https://github.com/siddharthajenukala/ci-cd-nodejs.git web-app && cd web-app
+            cd ~/web-app || git clone https://github.com/siddharthajenukala/ci-cd-nodejs.git web-app
+            cd ~/web-app
             git pull origin main
             npm install
-            pm2 restart app || pm2 start app.js --name app
+            pm2 describe app >/dev/null 2>&1 && pm2 restart app || pm2 start app.js --name app
+            pm2 save
           EOF
